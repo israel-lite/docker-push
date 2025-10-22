@@ -46,3 +46,12 @@ def read_task(task_id: int):
         if task.id == task_id:
             return task
     return {"error": "Task not found"}
+
+@app.put("/tasks/{task_id}", response_model=Task)
+def update_task(task_id: int, updated_task: TaskCreate):
+    for task in tasks_db:
+        if task.id == task_id:
+            task.title = updated_task.title
+            task.updated_at = datetime.utcnow()
+            return task
+    return {"error": "Task not found"}
