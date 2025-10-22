@@ -1,1 +1,37 @@
-todo_app
+from fastapi import FastAPI
+from pydantic import BaseModel
+from datetime import datetime
+
+app = FastAPI(title="Todo List API")
+
+class TaskCreate(BaseModel):
+    title: str
+
+class Task(TaskCreate):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    is_completed: bool
+
+# Simulated in-memory database
+tasks_db = []
+id_counter = 1
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to Wolong’s Todo API 🐉"}
+
+
+@app.post("/tasks/", response_model=Task)
+def create_task(task: TaskCreate):
+    global id_counter
+    new_task = Task(
+        id=id_counter,
+        title=task.title,
+        created_at=datetime.utcnow(),
+        updated_at=datetime.utcnow(),
+        is_completed=False
+    )
+    tasks_db.append(new_task)
+    id_counter += 1
+    return new_task
