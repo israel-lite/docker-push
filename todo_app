@@ -55,3 +55,12 @@ def update_task(task_id: int, updated_task: TaskCreate):
             task.updated_at = datetime.utcnow()
             return task
     return {"error": "Task not found"}
+
+@app.patch("/tasks/{task_id}/complete", response_model=Task)
+def complete_task(task_id: int):
+    for task in tasks_db:
+        if task.id == task_id:
+            task.is_completed = True
+            task.updated_at = datetime.utcnow()
+            return task
+    return {"error": "Task not found"}
