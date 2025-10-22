@@ -35,3 +35,14 @@ def create_task(task: TaskCreate):
     tasks_db.append(new_task)
     id_counter += 1
     return new_task
+
+@app.get("/tasks/", response_model=list[Task])
+def read_tasks():
+    return tasks_db
+
+@app.get("/tasks/{task_id}", response_model=Task)
+def read_task(task_id: int):
+    for task in tasks_db:
+        if task.id == task_id:
+            return task
+    return {"error": "Task not found"}
