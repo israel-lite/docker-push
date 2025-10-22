@@ -64,3 +64,9 @@ def complete_task(task_id: int):
             task.updated_at = datetime.utcnow()
             return task
     return {"error": "Task not found"}
+
+@app.delete("/tasks/{task_id}")
+def delete_task(task_id: int):
+    global tasks_db
+    tasks_db = [task for task in tasks_db if task.id != task_id]
+    return {"message": "Task deleted successfully"}
